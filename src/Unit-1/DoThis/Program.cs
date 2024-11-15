@@ -9,9 +9,13 @@ static class Program
         // initialize MyActorSystem
         MyActorSystem = ActorSystem.Create("MyActorSystem");
 
-        // time to make your first actors!
-        var consoleWriterActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleWriterActor()), "consoleWriterActor");
-        var consoleReaderActor = MyActorSystem.ActorOf(Props.Create(() => new ConsoleReaderActor(consoleWriterActor)), "consoleReaderActor");
+        IActorRef consoleWriterActor = MyActorSystem.ActorOf(Props.Create<ConsoleWriterActor>(), "consoleWriterActor");
+
+        //Props validationActorProps = Props.Create(() => new ValidationActor(consoleWriterActor));
+        IActorRef validationActor = MyActorSystem.ActorOf(Props.Create(() => new ValidationActor(consoleWriterActor)), "validationActor");
+
+        //Props consoleReaderProps = Props.Create<ConsoleReaderActor>(validationActor);
+        IActorRef consoleReaderActor = MyActorSystem.ActorOf(Props.Create<ConsoleReaderActor>(validationActor), "consoleReaderActor");
 
         // tell console reader to begin
         consoleReaderActor.Tell(ConsoleReaderActor.StartCommand);
