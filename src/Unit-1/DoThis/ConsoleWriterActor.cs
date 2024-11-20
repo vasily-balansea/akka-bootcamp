@@ -1,4 +1,4 @@
-﻿namespace WinTail;
+namespace WinTail;
 
 /// <summary>
 /// Actor responsible for serializing message writes to the console.

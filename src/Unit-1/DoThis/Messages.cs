@@ -1,18 +1,16 @@
 ﻿namespace WinTail;
 
-static class Messages
+class Messages
 {
-    #region Neutral/system messages
 
+    #region Neutral/system messages
     /// <summary>
     /// Marker class to continue processing.
     /// </summary>
-    public class ContinueProcessing;
-
+    public class ContinueProcessing { }
     #endregion
 
     #region Success messages
-
     /// <summary>
     /// Base class for signalling that user input was valid.
     /// </summary>
@@ -23,13 +21,11 @@ static class Messages
             Reason = reason;
         }
 
-        public string Reason { get; }
+        public string Reason { get; private set; }
     }
-
     #endregion
 
     #region Error messages
-
     /// <summary>
     /// Base class for signalling that user input was invalid.
     /// </summary>
@@ -40,18 +36,23 @@ static class Messages
             Reason = reason;
         }
 
-        public string Reason { get; }
+        public string Reason { get; private set; }
     }
 
     /// <summary>
     /// User provided blank input.
     /// </summary>
-    public class NullInputError(string reason) : InputError(reason);
+    public class NullInputError : InputError
+    {
+        public NullInputError(string reason) : base(reason) { }
+    }
 
     /// <summary>
     /// User provided invalid input (currently, input w/ odd # chars)
     /// </summary>
-    public class ValidationError(string reason) : InputError(reason);
-
+    public class ValidationError : InputError
+    {
+        public ValidationError(string reason) : base(reason) { }
+    }
     #endregion
 }
