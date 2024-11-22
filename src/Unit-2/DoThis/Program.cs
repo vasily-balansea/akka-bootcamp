@@ -1,6 +1,4 @@
-﻿using Akka.Actor;
-
-namespace ChartApp;
+﻿namespace ChartApp;
 
 static class Program
 {

@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms.DataVisualization.Charting;
-using Akka.Actor;
 
 namespace ChartApp.Actors;
 
