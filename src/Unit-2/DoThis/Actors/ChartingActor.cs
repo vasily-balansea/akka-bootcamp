@@ -2,18 +2,21 @@
 
 namespace ChartApp.Actors;
 
-public class ChartingActor : UntypedActor
+public class ChartingActor : ReceiveActor
 {
     #region Messages
 
-    public class InitializeChart
+    public class InitializeChart(Dictionary<string, Series>? initialSeries)
     {
-        public InitializeChart(Dictionary<string, Series>? initialSeries)
-        {
-            InitialSeries = initialSeries;
-        }
+        public Dictionary<string, Series>? InitialSeries { get; } = initialSeries;
+    }
 
-        public Dictionary<string, Series>? InitialSeries { get; }
+    /// <summary>
+    /// Add a new <see cref="Series"/> to the chart
+    /// </summary>
+    public class AddSeries(Series series)
+    {
+        public Series Series { get; } = series;
     }
 
     #endregion
@@ -29,14 +32,9 @@ public class ChartingActor : UntypedActor
     {
         _chart = chart;
         _seriesIndex = seriesIndex;
-    }
 
-    protected override void OnReceive(object message)
-    {
-        if (message is InitializeChart ic)
-        {
-            HandleInitialize(ic);
-        }
+        Receive<InitializeChart>(HandleInitialize);
+        Receive<AddSeries>(HandleAddSeries);
     }
 
     #region Individual Message Type Handlers
@@ -61,6 +59,16 @@ public class ChartingActor : UntypedActor
                 series.Value.Name = series.Key;
                 _chart.Series.Add(series.Value);
             }
+        }
+    }
+
+    private void HandleAddSeries(AddSeries series)
+    {
+        if (!string.IsNullOrEmpty(series.Series.Name) &&
+            !_seriesIndex.ContainsKey(series.Series.Name))
+        {
+            _seriesIndex.Add(series.Series.Name, series.Series);
+            _chart.Series.Add(series.Series);
         }
     }
 

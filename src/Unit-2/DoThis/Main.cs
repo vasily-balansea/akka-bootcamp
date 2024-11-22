@@ -36,4 +36,14 @@ public partial class Main : Form
     }
 
     #endregion
+
+    #region Button handlers
+
+    private void AddSeriesClick(object sender, EventArgs e)
+    {
+        var series = ChartDataHelper.RandomSeries("FakeSeries" + _seriesCounter.GetAndIncrement());
+        _chartActor.Tell(new ChartingActor.AddSeries(series));
+    }
+
+    #endregion
 }
